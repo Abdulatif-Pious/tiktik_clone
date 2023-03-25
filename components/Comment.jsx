@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { FaComment } from 'react-icons/fa'
 
 import useAuthStore from '../store/authStore';
-import { BASE_URL } from '../utils';
+// import { BASE_URL } from '../utils';
 
 const Comment = ({ comment, setComment, comments, isSending,  handleComment, handleCancel}) => {
   const { userProfile, allUsers } = useAuthStore();

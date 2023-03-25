@@ -20,7 +20,7 @@ const videoDetail = ({ VideoPost }) => {
   const handleLike = async (like) => {
     try {
       if (userProfile) {
-        const res = await axios.put(`http://localhost:3000/api/like`, {
+        const res = await axios.put(`${BASE_URL}/api/like`, {
           _id : post?._id,
           userId : userProfile?._id,
           like
@@ -35,7 +35,7 @@ const videoDetail = ({ VideoPost }) => {
   const handleComment = async () => {
     try {
       setIsSending(true);
-      const res = await axios.put(`http://localhost:3000/api/post/${post?._id}`, {
+      const res = await axios.put(`${BASE_URL}/api/post/${post?._id}`, {
         userId : userProfile?._id,
         _id : post?._id,
         comment,
