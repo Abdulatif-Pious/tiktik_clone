@@ -5,7 +5,7 @@ import { AiOutlineComment, } from 'react-icons/ai';
 import { useGlobalContext } from '@/globalContext/context';
 import useAuthStore from "@/store/auth-store";
 import { timeDifference } from '@/utils/time-difference';
-import {VideoItem, LikeButton, UserAvatar} from "@/components";
+import { VideoItem, LikeButton, UserAvatar} from "@/components";
 
 const Post = ({ post : { caption, _createdAt, comments, likes, video, _id, postedBy } }) => {
   {/* IF THE LENGTH OF ITEMS IS MORE 30 CHARACTERS*/}

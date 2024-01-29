@@ -1,8 +1,7 @@
 
 import useAuthStore from '@/store/auth-store';
 import { timeDifference } from '@/utils/time-difference';
-
-import { UserAvatar } from './';
+import { UserAvatar } from '@/components';
 
 const Comment = ({ comment, setComment, comments, isSending,  handleComment, handleCancel}) => {
   const { userProfile, allUsers } = useAuthStore();
