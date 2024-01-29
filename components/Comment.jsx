@@ -67,4 +67,4 @@ const Comment = ({ comment, setComment, comments, isSending,  handleComment, han
   );
 };
 
-export default Comment
+export default Comment;
