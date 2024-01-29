@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     res.status(200).json(data);
   }
   else if (req.method === 'POST') {
-    const doc = req.body;
+    const doc = await req.body;
 
     client.create(doc).then(() => {
       res.status(201).json('video created');

@@ -8,21 +8,21 @@ const authStore = (set) => ({
   userProfile : null,
   allUsers : [],
 
-  addUser : (user) => set({userProfile : user}),
+  addUser : (user) => set({ userProfile : user }),
   
-  removeUser : () => set({userProfile : null}),
+  removeUser : () => set({ userProfile : null }),
 
   fetchAllUsers : async () => {
     const response = await axios.get(`${BASE_URL}/api/users`);
 
-    set({allUsers : response.data});
+    set({ allUsers : response.data });
   }
 });
 
-const useAuthStore = create((
+const useAuthStore = create(
   persist(authStore, {
     name : 'auth'
   })
-));
+);
 
 export default useAuthStore;

@@ -1,103 +1,138 @@
-import React, { useState } from 'react'
-import Image from 'next/image';
-import Link from 'next/link';
+import  { useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { RiAccountCircleFill } from 'react-icons/ri';
 import { RxVideo } from 'react-icons/rx';
-import { GoVerified } from 'react-icons/go';
-
 import axios from 'axios';
 
-import { BASE_URL } from '../../utils';
-import  useAuthStore  from '../../store/authStore';
-import Post from '../../components/Post';
+import { BASE_URL } from '@/utils';
+import  useAuthStore  from '@/store/auth-store';
+import { useGlobalContext } from '@/globalContext/context';
+import { Post, UserAvatar } from '@/components';
+
+const Button = ({ account, isAccount, icon: Icon, setIsAccount, label }) => {
+  return (
+    account ? 
+      <div 
+        className={`
+          flex items-center gap-x-2  hover:opacity-60 py-2 px-4 rounded-full cursor-pointer
+          ${!isAccount ? "text-[#f51997] bg-white border-2 border-[#f51997]"  : "text-white bg-[#f51997]"}
+        `}
+        onClick={() => setIsAccount(true)}
+      >
+        <Icon />
+        <p className='font-semibold'>{label}</p>
+      </div>
+      :
+      <div 
+        className={`
+          flex items-center gap-x-2  hover:opacity-60 py-2 px-4 rounded-full cursor-pointer
+          ${isAccount ? "text-[#f51997] bg-white border-2 border-[#f51997]"  : "text-white bg-[#f51997]"}
+        `}
+        onClick={() => setIsAccount(false)}
+      >
+        <Icon />
+        <p className='font-semibold'>{label}</p>
+      </div>  
+    
+  );
+};
 
 const searchTerm = ({ videos }) => {
+  const [posts, setPosts] = useState([]);
   const [isAccount, setIsAccount] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const { userProfile, allUsers } = useAuthStore();
+  const { smallSidebar } = useGlobalContext();
 
   const router = useRouter();
   const { searchTerm } = router.query;
-  
-  const { allUsers } = useAuthStore();
 
-  const searchedAccounts = allUsers?.filter((user) => user?.userName?.toLowerCase().includes(searchTerm));
+  const searchedAccounts = allUsers?.filter((user) => user?.userName?.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const style = 'text-[#f51997] border-b-2 border-gray-400';
+  const otherAccounts = searchedAccounts?.filter((account) => account._id !== userProfile?._id)
+
+  useEffect(() => {
+    setPosts(videos)
+  }, [videos]);
+
+  useEffect(() => {
+    setIsMounted(!isMounted);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   return (
-    <div className='w-full'>
-      <div className='flex justify-center w-full my-10 border-b-2 border-gray-200 '>
-        <div 
-          className={`font-semibold text-xl flex items-center  px-4 rounded-lg cursor-pointer hover:bg-gray-100 ${isAccount && style}`}
-          onClick={() => setIsAccount(true)}
-        >
-          <RiAccountCircleFill className='text-[24px]' />
-          <p className='ml-2'>Accounts</p>
-        </div>
-        <div 
-          className={`font-semibold text-xl flex items-center  px-4 ml-2 rounded-lg cursor-pointer hover:bg-gray-100  ${!isAccount && style}`}
-          onClick={() => setIsAccount(false)}
-        >
-          <RxVideo className='text-[24px]' />
-          <p className='ml-2'>Videos</p>
-        </div>
+    <div className={`
+      flex flex-col items-center gap-y-8 w-full h-full md:ml-8 mt-10
+      ${smallSidebar ? "md:pl-[50px]" : "md:pl-[350px]"}  
+    `}
+    >
+      <div className='flex justify-center w-full gap-x-2'>
+        <Button 
+          isAccount={isAccount}
+          setIsAccount={setIsAccount}
+          icon={RiAccountCircleFill}
+          label="Accounts"
+          account
+        />
+        <Button 
+          isAccount={isAccount}
+          setIsAccount={setIsAccount}
+          icon={RxVideo}
+          label="Videos"
+        />
       </div>
 
-      <div className='w-full px-4'>
-        {isAccount ? (
-          <div>
-            {searchedAccounts.length > 0 ? (
-              <div>
-                {searchedAccounts?.map((item) => (
-                  <div key={item?._id} className='flex items-center justify-between mt-2 pb-2 border-b-2 border-gray-200'>
-                    <Link href={`/profiles/${item?._id}`} className="hover:bg-gray-200">
-                      <div className="flex items-center w-full ">
-                        <div>
-                          <Image 
-                            src={item?.image}
-                            alt="username's image"
-                            width={50}
-                            height={50}
-                            className="rounded-full hover:border-2 hover:border-[#f51997ac]"
-                          />
-                        </div>
-                        <div className='flex items-center ml-2'>
-                          <p className='font-semibold'>{item?.userName}</p>
-                          <GoVerified  className='text-[12px] text-[#f51997] ml-2'/>
-                        </div>
-                      </div>
-                    </Link>
-                  <p className='text-[#f51997] cursor-pointer'>
-                    Follow
-                  </p>
-                  </div> 
-                ))}
-              </div>
-            ) : (
-              <h3 className='flex justify-center'>
-                No Result
-              </h3>
-            )}
-          </div>
-        ) : (
-          <div className='flex justify-center flex-wrap gap-4 xl:gap-10 w-full h-fit mt-10'>
-            {videos?.length > 0 ? (
-              videos?.map((video) => (
-                <Post post={video} key={video?.video?.asset?._id}/>
-              ))
-            ) : (
-              <h3 className='flex justify-center'>
-                No results
-              </h3>
-            )}
-            
-          </div>
-        )}
-      </div>
-      {console.log(videos)}
+      {isAccount ? (
+        <div 
+          className={`
+            flex h-full 
+            ${!otherAccounts.length  && "items-center"}`
+          }
+        >
+          {!!otherAccounts.length ? (
+            <div>
+              {otherAccounts?.map((item, i) => (
+                <UserAvatar 
+                  key={`${item}-${i}`}
+                  user={item}
+                />
+              ))}
+            </div>
+          ) : (
+            <h3 className='font-semibold text-4xl text-[#f51997]'>
+              No result
+            </h3>
+          )}
+        </div>
+      ) : (
+        <div 
+          className={`
+            flex justify-center   flex-wrap gap-4 xl:gap-10 w-full
+            ${!posts.length ? "h-full items-center" : "h-fit"}
+          `}
+        >
+          {!!posts?.length  ? (
+            posts?.map((item, i) => (
+              <Post 
+                key={`${item?.video?.asset?._id}-${i}`}
+                post={item} 
+              />
+            ))
+          ) : (
+            <h3 className='font-semibold text-4xl text-[#f51997] '>
+              No result
+            </h3>
+          )}
+          
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
 export default searchTerm;
 

@@ -14,22 +14,5 @@ a {
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #f519975a;
-  border-radius: 100px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: transparent;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #f519979c;
-}
-
-::-webkit-scrollbar-thumb:active {
-  background-color: #f51997cc;
+  width: 0;
 }

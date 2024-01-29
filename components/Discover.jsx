@@ -2,32 +2,48 @@ import React from 'react'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { topics } from '../utils/constants';
+import { topics } from '@/utils/constants';
+import { useGlobalContext } from '@/globalContext/context';
 
 const Discover = () => {
   const router = useRouter();
   const { topic } = router.query;
 
-  const topicStyle = 'flex  items-center justify-center  m-1 p-2 border-gray-300 xl:border-2 rounded xl:rounded-full cursor-pointer hover:bg-gray-100';
-  const activeTopicStyle = 'flex justify-center text-[#f51997] items-center m-1 p-2 xl:border-[#f51997] xl:border-2 rounded xl:rounded-full cursor-pointer hover:bg-gray-100';
+  const { mobileSidebar, smallSidebar, setMobileSidebar } = useGlobalContext();
 
   return (
-    <div className="my-3 xl:border-b-2 xl:border-gray-200">
-        <p className='hidden xl:block font-bold text-gray-400 my-2'>
+    <div className="my-1">
+      {(!smallSidebar || mobileSidebar) && 
+        <p className='font-semibold text-gray-500 my-2'>
           Popular topics
         </p>
-        <div className="flex  flex-wrap my-3">
-          {topics.map((item, i) => (
-            <Link href={`/?topic=${item.name}`} key={`${topics.name}-${i}`}>
-              <div className={topic === item.name ? activeTopicStyle : topicStyle}> 
-                <span className='font-bold text-2xl mx-2' title={item.name}>{item.icon}</span>
-                <span className="hidden xl:block capitalize font-medium mr-2">{item.name}</span>
-              </div>
-            </Link>
+      }
+      <div className="flex flex-wrap gap-x-2">
+        {topics.map((item, i) => (
+          <Link 
+            key={`${topics.name}-${i}`}
+            href={`/?topic=${item.name}`} 
+            className={`
+                flex items-center justify-center gap-x-2 w-full border-2 p-3 my-1 cursor-pointer hover:bg-gray-100 
+                ${item.name === topic ? "text-[#f51997] border-[#f519975c]  rounded-lg" : "border-gray-300 rounded-full"}
+              `
+            }
+            onClick={() => {
+              if (window.innerWidth < 768) {
+                setMobileSidebar(false)
+              }
+            }}
+            title={item.name}
+          >
+            <span>{item.icon}</span>
+            {(mobileSidebar || !smallSidebar) && (
+              <span className={`capitalize font-medium mr-2`}>{item.name}</span>
+            )}    
+          </Link>
         ))}
-        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Discover
+export default Discover;

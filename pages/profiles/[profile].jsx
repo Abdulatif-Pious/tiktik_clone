@@ -1,15 +1,48 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios';
-import Image from 'next/image';
-import { GoVerified } from 'react-icons/go';
 import { BsBookmarkHeartFill, BsHeartFill  } from 'react-icons/bs';
 
-import { BASE_URL } from '../../utils';
-import Post from '../../components/Post'
+import { useGlobalContext } from '@/globalContext/context';
+import { BASE_URL } from '@/utils';
+import { UserAvatar, Post } from '@/components';
 
-const profile = ({ profile : {user, userPosts : posts, userLikedPosts } }) => {
+const Button = ({ showPosts, setShowPosts,  icon : Icon, label, like }) => {
+  
+  return (
+    like ? 
+      <div 
+        className={`
+          flex items-center gap-x-2  hover:opacity-60 py-2 px-4 rounded-full cursor-pointer
+          ${showPosts ? "text-[#f51997] bg-white border-2 border-[#f51997]"  : "text-white bg-[#f51997]"}
+        `}
+        onClick={() => setShowPosts(false)}  
+      >
+      <Icon />
+      <p className='font-semibold'>
+        {label}
+      </p>
+    </div>
+    : 
+    <div 
+    className={`
+      flex items-center gap-x-2  hover:opacity-60 py-2 px-4 rounded-full cursor-pointer
+      ${!showPosts ? "text-[#f51997] bg-white border-2 border-[#f51997]"  : "text-white bg-[#f51997]"}
+    `}
+      onClick={() => setShowPosts(true)}  
+    >
+      <Icon />
+      <p className='font-semibold'>
+        {label}
+      </p>
+    </div>
+  );
+};
+
+const Profile = ({ profile : { user, userPosts : posts, userLikedPosts } }) => {
   const [showPosts, setShowPosts] = useState(true);
   const [userPosts, setUserPosts] = useState([]);
+
+  const { smallSidebar } = useGlobalContext();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -23,65 +56,55 @@ const profile = ({ profile : {user, userPosts : posts, userLikedPosts } }) => {
     fetchPosts();
   }, [showPosts, posts, userLikedPosts]);
 
-  const postStyle= "text-[#f51997] border-b-2 border-gray-400";
-  const likedPostStyle = "text-[#f51997] border-b-2 border-gray-400";
-  
   return (
-    <div> {console.log(userLikedPosts)} 
+    <div 
+      className={`
+        flex flex-col items-center gap-y-8 w-full h-full md:ml-8 mt-10
+        ${smallSidebar ? "md:pl-[50px]" : "md:pl-[350px]"}
+       
+      `}
+    >
+      <UserAvatar 
+        user={user}
+        notLink
+      />
 
-      <div className='flex items-center justify-center mt-10'>
-        <div>
-          <Image 
-            src={user?.image}
-            alt="user picture"
-            width={100}
-            height={100}
-            className="rounded-full"
-          />
-        </div>
-        <div className='flex items-center'>
-          <h3 className='font-semibold text-xl ml-6 mr-2'>{user?.userName}</h3>
-          <GoVerified className="text-xl text-[#f51997]" />
-        </div>
+      <div className='flex justify-center w-full gap-x-2'>
+        <Button 
+          showPosts={showPosts}
+          setShowPosts={setShowPosts}
+          icon={BsBookmarkHeartFill}
+          label="posts"
+        />
+        <Button 
+          showPosts={showPosts}
+          setShowPosts={setShowPosts}
+          icon={BsHeartFill}
+          label="liked posts"
+          like
+        />
       </div>
-
-      <div>
-        <div className='flex justify-center w-full my-20 border-b-2 border-gray-200 '>
-          <div 
-            className={`flex items-center ${showPosts && postStyle} cursor-pointer hover:bg-gray-100 px-4 rounded-lg`}
-            onClick={() => setShowPosts(true)}  
-          >
-            <BsBookmarkHeartFill />
-            <p className='font-semibold text-lg ml-2'>
-              Posts
-            </p>
-          </div>
-          <div 
-            className={`flex items-center ${!showPosts && likedPostStyle} cursor-pointer hover:bg-gray-100 px-4 rounded-lg ml-2`}
-            onClick={() => setShowPosts(false)}    
-          >
-            <BsHeartFill />
-            <p className='font-semibold text-lg ml-2'>
-              Liked Posts
-            </p>
-        </div>
-        </div>
-        <div className='flex justify-center flex-wrap gap-4 xl:gap-10 w-full h-fit mt-2 xl:mt-10'>
-          {userPosts.length > 0 
-            ? userPosts?.map((userPost, i) => (
-                <Post post={userPost} key={`${userPost?._id}-${i}`}/>
-              ))
-            : <h2>
-                {`No ${showPosts ? "" : 'Liked'} Posts yet `}
-              </h2>
-          }
-        </div>
+      <div  
+        className={`
+          flex justify-center flex-wrap gap-4 xl:gap-10 w-full
+          ${!userPosts.length  ? "h-full items-center" : "h-fit"}
+        `}
+      >
+        {!!userPosts.length ? 
+          userPosts?.map((userPost, i) => (
+            <Post post={userPost} key={`${userPost?._id}-${i}`}/>
+          ))
+          : 
+          <h3 className='font-semibold text-4xl text-[#f51997]'>
+            {`No ${showPosts ? "" : 'liked'} posts yet `}
+          </h3>
+        }
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default profile;
+export default Profile;
 
 export const getServerSideProps = async ({ params : { profile }}) => {
   const res = await axios(`${BASE_URL}/api/profiles/${profile}`);

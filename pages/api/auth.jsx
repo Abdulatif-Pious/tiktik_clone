@@ -1,8 +1,8 @@
 
 import { client } from '../../utils/client';
 
-export default function handler(req, res) {
-  const doc = req.body;
+export default async function handler(req, res) {
+  const doc = await req.body;
 
   client
     .createIfNotExists(doc)

@@ -1,36 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+import  { useState, useEffect } from 'react';
 import axios from 'axios';
-import { GoVerified } from 'react-icons/go';
+import { AiOutlineComment, } from 'react-icons/ai';
 
-import { BASE_URL } from '../../utils';
-import LikeButton from '../../components/LikeButton';
-import Comment from '../../components/Comment';
-import VideoPiece from '../../components/VideoPiece';
-import  useAuthStore  from '../../store/authStore'; 
+import { useGlobalContext } from '@/globalContext/context'
+import  useAuthStore  from '@/store/auth-store'; 
+import { BASE_URL } from '@/utils';
+import { timeDifference } from '@/utils/time-difference';
+import { LikeButton, Comment, VideoItem, UserAvatar } from '@/components';
+
+const Button = ({ likes, postId, color, likesLength, commentedByUser, post }) => {
+  return (
+    <div className='text-xs md:text-base flex items-center justify-center flex-wrap gap-x-2 py-2 px-4 rounded-full bg-[#f51997]/80'>
+      {likes ? (
+        <>
+          <LikeButton 
+            likes={likes}
+            postId={postId}
+            color={color}
+          />
+          {!!likesLength ? 
+            <p className='font-medium text-white'>
+              <span className="font-semibold">{likesLength} {" "}</span>
+              {likesLength > 1 ? "likes" : "like"}
+            </p>
+            : 
+            <p className="font-medium text-center text-white">Be the first to
+              <span className='font-semibold italic'>{" "}like</span>
+            </p>
+          }
+        </>
+      )
+      : 
+      (
+        <>
+          <AiOutlineComment  
+            className={`font-semibold text-xl 
+              ${!!commentedByUser.length && "text-white"} 
+            `} 
+          />
+          {!!post?.comments ? 
+          <p className='font-medium text-white'>
+            <span className='font-semibold '>{post?.comments.length}{" "}</span>
+            {post?.comments?.length > 1 ? "comments" : "comment" }
+          </p>
+          : 
+          <p className="text-xs md:text-base font-medium text-white">Be the first to
+            <span className='font-semibold  italic'>{" "}comment</span>
+          </p>
+          }
+        </>
+      )}
+    </div>
+  );
+};
 
 const videoDetail = ({ VideoPost }) => {
   const [post, setPost] = useState(VideoPost);
-  const [comment, setComment] = useState('')
+  const [comment, setComment] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [likesLength, setLikesLength] = useState(post?.likes?.length);
 
+  const { smallSidebar, likesState } = useGlobalContext();
   const { userProfile }  = useAuthStore();
 
-  const handleLike = async (like) => {
-    try {
-      if (userProfile) {
-        const res = await axios.put(`${BASE_URL}/api/like`, {
-          _id : post?._id,
-          userId : userProfile?._id,
-          like
-        });
-      setPost({ ...post, likes : res.data.likes });
-      } 
-    } catch (error) {
-    console.log(error);
+  useEffect(() => {
+    if (likesState.postId === post?._id) {
+      setLikesLength(likesState.likesCount);
     }
-  };
+  }, [likesState]);
+
+  const commentedByUser = post?.comments?.filter((comment) => comment?.postedBy?._ref === userProfile?._id);
 
   const handleComment = async () => {
     try {
@@ -39,17 +79,15 @@ const videoDetail = ({ VideoPost }) => {
         userId : userProfile?._id,
         _id : post?._id,
         comment,
-        createdAt: new Date().toLocaleString(),
+        createdAt: new Date(),
       });
       setPost({ ...post, comments : res.data.comments  })
-      setComment("");
-      setIsSending(false);
-      console.log(post);
     } catch (error) {
       console.log(error);
+    } finally {
       setComment("");
       setIsSending(false);
-    } 
+    }
   }
   
   const handleCancel = () => {
@@ -57,40 +95,46 @@ const videoDetail = ({ VideoPost }) => {
     setIsSending(false);
   }
 
-  
+  useEffect(() => {
+    setIsMounted(!isMounted)
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
-    <div className="flex justify-center flex-wrap w-full">
-      <div className="flex justify-center  w-full h-fit xl:basis-1/3 mt-[100px]">
-        <VideoPiece video={post} videoPiece />
+    <div 
+      className={`
+        flex flex-col items-center gap-y-8 w-full h-full md:ml-8 mt-10
+        ${smallSidebar ? "md:pl-[50px]" : "md:pl-[350px]"}
+    `}
+    >
+      <div className="flex justify-center w-full">
+        <VideoItem video={post?.video} widthFull />
       </div>
 
-      <div className="flex  flex-col w-full xl:basis-2/3 px-4 mt-[100px]" >
-        <div className="flex  justify-between items-center">
-          <div className="flex items-center">
-            <Link href={`/profiles/${post?.postedBy?._id}`} className="flex items-center">
-              <Image
-                src={post?.postedBy?.image}
-                alt="Username's image"
-                width={50}
-                height={50}
-                className=" w-[50px] h-[50px] rounded-full hover:border-2 hover:border-[#f5199790] cursor-pointer"
-              />
-              <h3 className="font-bold text-xl mx-3 cursor-pointer">{post?.postedBy?.userName}</h3>
-            </Link>
-            <GoVerified className="w-[14px] h-[14px] flex items-center text-[#f51997]"/>
+      <div className='flex flex-col w-4/5'>
+        <div className='flex items-center  justify-between flex-wrap gap-6'>
+          <UserAvatar user={post?.postedBy} />
+          <div className='flex items-center gap-x-2'>
+            <Button 
+              likes={post?.likes}
+              postId={post?._id}
+              color="text-white"
+              likesLength={likesLength}
+            />
+            <Button 
+              commentedByUser={commentedByUser}
+              post={post}
+            />
           </div>
-          <h4 className="font-semibold text-lg text-[#f51997] cursor-pointer">Follow</h4>
+          <p className='ml-auto text-gray-500 italic'>{timeDifference(post?._createdAt)} ago</p>
         </div>
+      
         {post?.caption && (
-          <p className="font-medium text-lg">{post?.caption}</p>
+          <p className="font-medium my-4">{post?.caption}</p>
         )}
-        
-        <hr className="my-4 " />
-        <LikeButton 
-          likes={post?.likes}  
-          handleLike={() => handleLike(true)}
-          handleDislike={() => handleLike(false)}
-        />
         
         <Comment 
           comment={comment}
@@ -116,7 +160,6 @@ export const getServerSideProps = async ({ params : { videoDetail } }) => {
   return {
     props : {
       VideoPost : response.data,
-      
     }
-  }
-}
+  };
+};

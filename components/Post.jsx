@@ -1,142 +1,153 @@
-import React from 'react'
-import Image from 'next/image';
+import { useEffect, useState } from 'react'
 import Link from 'next/link';
-import { GoVerified } from 'react-icons/go';
-import { TbDots } from 'react-icons/tb';
-import { AiOutlineHeart, AiOutlineComment } from 'react-icons/ai';
-import { TbSend } from 'react-icons/tb'
-import { BsBookmarkHeart } from 'react-icons/bs';
+import { AiOutlineComment, } from 'react-icons/ai';
 
-import VideoPiece from './VideoPiece'; 
-import LikeButton from './LikeButton';
+import { useGlobalContext } from '@/globalContext/context';
+import useAuthStore from "@/store/auth-store";
+import { timeDifference } from '@/utils/time-difference';
+import {VideoItem, LikeButton, UserAvatar} from "@/components";
 
 const Post = ({ post : { caption, _createdAt, comments, likes, video, _id, postedBy } }) => {
+  {/* IF THE LENGTH OF ITEMS IS MORE 30 CHARACTERS*/}
+  const [isFullCaption, setIsFullCaption] = useState(false);  
+  const [commentObj, setCommentObj] = useState({ _key: null, isFullComment: false });
+  
+  const [likesLength, setLikesLength] = useState(likes?.length);  
+  
+  const { userProfile } = useAuthStore();
+  const { likesState } = useGlobalContext(); 
+
+  const commentedByUser = comments?.filter((comment) => comment?.postedBy?._id === userProfile?._id);
+
+  useEffect(() => {
+    if (likesState.postId === _id) {
+      setLikesLength(likesState.likesCount);
+    }
+  }, [likesState]);
+
+  const handleFullComment = (_key) => {
+    const filteredComment = comments.filter((comment) => comment._key === _key);
+    if (filteredComment._key === _key) {
+      setCommentObj({ _key, isFullComment: true });
+    } else {
+      setCommentObj({ _key, isFullComment: false });
+    }
+  }
 
   return (
-    <article className='flex flex-col items-center h-fit  p-2 bg-gray-50 rounded-2xl'>
-      <div className="flex  justify-between w-full ">
-        <div className="flex items-center">
-          <Link href={`/profiles/${postedBy?._id}`} className="cursor-pointer">
-            <div className="flex items-center justify-center w-full">
-              <Image 
-                src={postedBy?.image} 
-                alt="user profile"
-                width={30}  
-                height={30}
-                className="rounded-full object-contain hover:border-2 hover:border-[#f5199790]"
-                />
-              <h3 className="font-semibold text-[18px] ml-4 mr-1">{postedBy?.userName}</h3>
-              <GoVerified  className="text-[12px] flex items-center justify-center text-[#F51997]" />
-            </div>
+    <article className='w-[380px] space-y-2 p-2 bg-gray-50 rounded-2xl'>
+      <div className='flex items-center justify-between'>
+        <UserAvatar
+          user={postedBy}
+        />
+        <p className='text-gray-500 italic'>
+          {timeDifference(_createdAt)} ago
+        </p>       
+      </div>
+      <VideoItem video={video} />
+      
+      <div className="w-[340px]">
+        <div className='flex gap-x-1'>
+          <LikeButton 
+            likes={likes} 
+            postId={_id}
+            color="text-[#f51997]"
+          />
+          <Link href={`/videoDetails/${_id}`}>
+            <AiOutlineComment 
+              className={`
+                font-semibold text-xl hover:opacity-80 cursor-pointer
+                ${!!commentedByUser?.length ? "text-[#f51997]" : "text-gray-500"}
+              `} 
+            />
           </Link>
-          <div className='flex items-center justify-center ml-2'>
-            <h4 className={`font-semibold text-base text-[#f51997] cursor-pointer`}>
-              Follow  
-            </h4>
-          </div>           
         </div>
-        <div className="flex items-center ">
-          <TbDots className="text-base text-gray-500 cursor-pointer" />
-        </div>
-      </div>
-
-      <div className="mt-4 relative">
-        <VideoPiece video={video} />
-      </div>
-      <div className="w-[300px]">
-        <div className="flex justify-between mt-2">
-          <div className='flex'>
-            <AiOutlineHeart className="font-semibold text-xl cursor-pointer" />
-            <Link href={`/videoDetails/${_id}`}>
-              <AiOutlineComment className="font-semibold text-xl mx-2 cursor-pointer" />
-            </Link>            
-            <Link href={`/direct/`}>
-              <TbSend className="font-semibold text-xl cursor-pointer" />
-            </Link>          </div>
-          <div>
-            <BsBookmarkHeart className="font-semibold text-xl cursor-pointer" />
-          </div>
-        </div>
+        
         <div>
-          {likes?.length > 0 ? (
-            <p>
-              <span className="font-semibold text-[#f51997] ">{likes?.length} {" "}</span>
-              likes
+          {!!likesLength ? 
+            <p className='font-semibold text-gray-500'>
+              <span className="font-semibold text-[#f51997]">{likesLength} {" "}</span>
+              {likesLength > 1 ? "likes" : "like"}
             </p>
-          ) : (
-            <p className="font-semibold text-base text-gray-400">Be the first to
+            : 
+            <p className="font-medium text-gray-500">Be the first to
               <span className='font-semibold text-[#f51997] italic'>{" "}like</span>
             </p>
-          )}
-          {caption.length  && (
-            <div className='w-[300px]'>
-              <Link href={`/profiles/${postedBy?._id}`}>
-                <h3 className="font-semibold inline-block text-[#f51997]">
-                  {postedBy?.userName}
-                </h3>
-              </Link>
-                {caption?.length > 30 ? (
-                  <div>
-                    <p className="font-semibold text-base truncate">
-                      {caption?.slice(0, 30)}...
-                    </p> 
-                    <span className="font-semibold text-[#f51997] cursor-pointer italic" >{" "}more</span>
-                  </div>
-                  ) : (
-                    <p className='font-semibold text-base'>
-                      {" "}{caption}
-                    </p>
-                  )}
-            </div>
-          )}
-          <hr className='my-2'/>
+          }
 
-          <div className='w-[300px]'>
-            {comments && (
-              comments?.slice(0, 2).map((comment) => (
-                <div key={comment?._key} className="flex items-center mt-2">
-                  <Link href={`/profiles/${comment?.postedBy?._id}`}>
-                    <Image 
-                      src={comment?.postedBy?.image}
-                      alt="userName's picture"
-                      width={30}
-                      height={30}
-                      className="object-contain rounded-full hover:border-2 border-[#f5199790]"
-                    /> 
-                  </Link>
-                  <div className='ml-2'>
-                    {comment?.comment?.length > 30 
-                      ? <div>
-                          <p>{comment?.comment.slice(0, 30)}...</p>
-                          <span className='font-semibold text-[#f51997] cursor-pointer italic'>more</span>
-                        </div>
-                    :  <p>{comment?.comment}</p>
-                    }
-                  </div>
-                </div>
-              ))
-            )}
-            {comments?.length > 0 ? (
-              <Link href={`/videoDetails/${_id}`}>
-                <p className='mt-3'>View all
-                  <span className="font-semibold text-[#f51997]"> {comments?.length} </span>
-                  comments
-                </p>
+          {!!caption.length && 
+            (caption?.length > 30 && !isFullCaption) ? 
+            <>
+              <p className="font-medium">
+                {caption?.slice(0, 30)}...
+              </p>  
+              <span 
+                className="font-medium text-[#f51997]/80 hover:opacity-60 cursor-pointer italic" 
+                onClick={() => setIsFullCaption(true)}
+              >more
+              </span>
+            </>
+            : 
+            <>
+              <p className='font-semibold'>{caption}</p>
+              {isFullCaption && 
+                <span 
+                  className="font-medium text-[#f51997]/80 hover:opacity-60 cursor-pointer italic" 
+                  onClick={() => setIsFullCaption(false)}
+                >less
+                </span>
+              }
+            </>
+          }
+
+          <hr className='my-2 border-[#f51997]'/>
+
+          {!!comments?.length ? 
+            comments?.slice(0, 2).map((comment) => (
+              <div key={comment?._key}>
+                <UserAvatar user={comment?.postedBy} />
+                <>
+                  {(comment?.comment?.length > 30 && commentObj._key !== comment?._key) ? 
+                    <>
+                      <p>{comment?.comment.slice(0, 30)}...</p>
+                      <span 
+                        className='font-semibold text-[#f51997]/80 hover:opacity-60 cursor-pointer italic'
+                        onClick={() => handleFullComment(comment?._key)}
+                      >more
+                      </span>
+                    </>
+                  :  
+                    <>
+                      <p>{comment?.comment}</p>
+                      {commentObj._key === comment?._key && 
+                        <span 
+                          className="font-medium text-[#f51997]/80 hover:opacity-60 cursor-pointer italic" 
+                          onClick={() => setCommentObj({ _key: null, isFullComment: false } )}
+                        >less
+                        </span>
+                      }
+                    </>
+                  }
+                </>
+              </div>  
+            ))
+            : 
+            <Link href={`/videoDetails/${_id}`} className="font-medium text-gray-500">
+              Be the first to 
+              <span className='font-semibold text-[#f51997] italic'>{" "}comment</span>
+            </Link>
+          }
+            {comments?.length > 2 && 
+              <Link href={`/videoDetails/${_id}`} className='hover:text-gray-400'>
+                View all 
+                <span className="font-semibold text-[#f51997] "> {comments?.length} </span>
+                comments
               </Link>
-            ) : (
-              <Link href={`/videoDetails/${_id}`}>
-                <p className='font-semibold text-gray-400'>
-                  Be the first to 
-                  <span className='font-semibold text-[#f51997] italic'>{" "}comment</span>
-                  </p>
-              </Link>
-            )}
-            <p className='mt-2'>{_createdAt}</p>
-          </div>
+            }
         </div>
       </div>
     </article>
-  )
-}
+  );
+};
 
 export default Post

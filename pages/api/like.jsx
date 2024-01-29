@@ -3,9 +3,14 @@ import { uuid } from 'uuidv4';
 import { client } from '../../utils/client'; 
 
 export default async function handler(req, res) {
-  if (req.method === "PUT") {
-    const { userId, _id, like } = req.body;
+  try {
+    if (req.method === "PUT") {
+    const { userId, _id, like } = await req.body;
     
+    if (!userId.length || !_id.length) {
+      return res.status(204).json("missing required fields");
+    }
+
     const data = 
     like ? await client
       .patch(_id)
@@ -23,9 +28,9 @@ export default async function handler(req, res) {
       .commit();
     
       res.status(200).json(data);
-  }  else if (req.method === "GET") {
-
-
-    res.status(200).json({message : "you don't know" });
-  };
+    }  
+  } catch (error) {
+    res.status(500).json(["LIKE_PUT_ERROR: ", error]);
+  }
+  
 }

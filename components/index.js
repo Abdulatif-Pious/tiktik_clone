@@ -1,7 +1,11 @@
-import { default as Comment } from './Comment';
-import { default as LikeButton} from './LikeButton';
-import { default as Navbar } from './Navbar';
-import { default as Post } from './Post';
-import { default as Sidebar } from './Sidebar';
-import { default as SuggestedAccounts } from './SuggestedAccounts';
-import { default as Footer } from './Footer';
+export { default as Comment } from './comment';
+export { default as LikeButton} from './like-button';
+export { default as Navbar } from './navbar';
+export { default as Post } from './post';
+export { default as UserAvatar } from "./user-avatar";
+export { default as Sidebar } from './sidebar';
+export { default as MobileSidebar } from './mobile-sidebar';
+export { default as SuggestedAccounts } from './suggested-accounts';
+export { default as Footer } from './footer';
+export { default as VideoItem } from './video-item';
+export { default as Discover } from './discover';
