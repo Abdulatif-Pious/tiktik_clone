@@ -6,7 +6,10 @@ import { AiOutlineClose } from "react-icons/ai";
 
 import { useGlobalContext } from '@/globalContext/context';
 import useAuthStore from '@/store/auth-store';
-import { Footer, Discover, SuggestedAccounts } from "@/components";
+import { SuggestedAccounts } from "@/components";
+
+import Footer from "./footer";
+import Discover from "./discover";
 
 const MobileSidebar = () => {
   const { mobileSidebar, setMobileSidebar } = useGlobalContext();

@@ -4,7 +4,9 @@ import { BsBookmarkHeartFill, BsHeartFill  } from 'react-icons/bs';
 
 import { useGlobalContext } from '@/globalContext/context';
 import { BASE_URL } from '@/utils';
-import { UserAvatar, Post } from '@/components';
+import { UserAvatar,  } from '@/components';
+
+import  Post  from '../../components/post';
 
 const Button = ({ showPosts, setShowPosts,  icon : Icon, label, like }) => {
   
