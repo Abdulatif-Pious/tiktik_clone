@@ -6,7 +6,9 @@ import { useGlobalContext } from '@/globalContext/context'
 import  useAuthStore  from '@/store/auth-store'; 
 import { BASE_URL } from '@/utils';
 import { timeDifference } from '@/utils/time-difference';
-import { LikeButton, Comment, VideoItem, UserAvatar } from '@/components';
+import { LikeButton, VideoItem, UserAvatar } from '@/components';
+
+import Comment from "../../components/comment";
 
 const Button = ({ likes, postId, color, likesLength, commentedByUser, post }) => {
   return (
