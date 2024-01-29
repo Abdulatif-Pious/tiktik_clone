@@ -1,4 +1,4 @@
-import  Comment  from '@/components/comment';
+// import  Comment  from '@/components/comment';
 import  LikeButton from '@/components/like-button';
 import  Navbar  from '@/components/navbar';
 import  Post  from '@/components/post';
@@ -11,7 +11,7 @@ import  VideoItem  from '@/components/video-item';
 import  Discover  from '@/components/discover';
 
 export {
-  Comment,
+  // Comment,
   LikeButton,
   Navbar,
   Post,
