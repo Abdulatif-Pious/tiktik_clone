@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-
 import Head from 'next/head';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -9,7 +8,7 @@ import  { MobileSidebar, Navbar, Sidebar }  from '@/components';
 import  useAuthStore  from "@/store/auth-store";
 
 export default function App({ Component, pageProps }) {
-  const { fetchAllUsers,  allUsers} = useAuthStore();
+  const { fetchAllUsers,  allUsers } = useAuthStore();
 
   useEffect(() => {
     fetchAllUsers();
@@ -26,12 +25,12 @@ export default function App({ Component, pageProps }) {
 
       <AppContext>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}>
-          <div className='h-screen overflow-y-scroll'>
+          <div className='h-screen overflow-y-auto overflow-x-hidden'>
             <nav className='fixed flex items-center justify-between w-full h-[80px] bg-gray-50  px-2 z-10 shadow-md shadow-[#f519973a]'>
               <Navbar />
             </nav>
             <div className='flex w-full h-full'>
-              <aside className='fixed bottom-0 top-0 h-full pt-[80px] md:bg-gray-50 overflow-y-hidden hover:overflow-y-scroll transition'>
+              <aside className='fixed bottom-0 top-0 h-full pt-[80px] md:bg-gray-50 overflow-y-auto transition'>
                 <Sidebar />
               </aside>
               <aside className='fixed bottom-0 top-0 z-20'>
