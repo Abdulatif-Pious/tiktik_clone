@@ -16,7 +16,7 @@ const Sidebar = () => {
   const otherUsers = allUsers.filter((users) => users?._id !== userProfile?._id);
 
   return (
-    <div className='h-full  mx-2 my-4'>
+    <div className='h-full mx-2 my-4'>
       {smallSidebar ? (
         // SMALL SIDEBAR
         <div className="hidden md:block w-[50px] mb-auto">

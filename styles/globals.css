@@ -13,6 +13,7 @@ a {
   text-decoration:none;
 }
 
+/* chrome and safari browser */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -28,4 +29,33 @@ a {
 
 ::-webkit-scrollbar-thumb:active {
   background-color: rgb(102, 105, 110);
+}
+
+/* microsoft edge browser */
+::-ms-scrollbar {
+  width: 6px;
+}
+
+::-ms-scrollbar-thumb {
+  background-color: rgb(198, 204, 216);
+  border-radius: 10px;
+}
+
+::-ms-scrollbar-thumb:hover {
+  background-color: rgb(147, 152, 162);
+}
+
+::-ms-scrollbar-thumb:active {
+  background-color: rgb(102, 105, 110);
+}
+
+
+@media screen and (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+
+  ::-ms-scrollbar {
+    width: 0;
+  }
 }

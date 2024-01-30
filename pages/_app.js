@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }) {
 
       <AppContext>
         <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}>
-          <div className='h-screen overflow-y-auto overflow-x-hidden'>
+          <div className='h-screen overflow-y-auto'>
             <nav className='fixed flex items-center justify-between w-full h-[80px] bg-gray-50  px-2 z-10 shadow-md shadow-[#f519973a]'>
               <Navbar />
             </nav>
@@ -37,7 +37,7 @@ export default function App({ Component, pageProps }) {
                 <MobileSidebar />
               </aside>
               
-              <main className='w-full h-full pt-[80px]'>
+              <main className='w-full max-w-[1800px] mx-auto h-full pt-[80px] my-10'>
                 <Component {...pageProps} />
               </main>
             </div>

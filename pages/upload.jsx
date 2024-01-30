@@ -93,7 +93,7 @@ const Upload = () => {
   return (
     <div 
       className={`
-        flex flex-col xl:justify-center gap-y-8 w-full h-full md:ml-8 mt-10 xl:mt-0
+        flex flex-col xl:justify-center gap-y-8 h-full md:ml-8
         ${smallSidebar ? "md:pl-[50px]" : "md:pl-[350px]"}
       `}
     >

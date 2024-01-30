@@ -10,7 +10,7 @@ export default function Home({ post }) {
   return (
     <div 
       className={`
-        flex justify-center  w-full h-full md:ml-8 my-10 xl:my-0
+        flex justify-center h-full md:ml-8 
         ${smallSidebar ? "md:pl-[50px]" : "md:pl-[350px]"}
         ${!post.length  && "items-center"}
       `}

@@ -59,7 +59,7 @@ const Profile = ({ profile : { user, userPosts : posts, userLikedPosts } }) => {
   return (
     <div 
       className={`
-        flex flex-col items-center gap-y-8 w-full h-full md:ml-8 mt-10
+        flex flex-col items-center gap-y-8 h-full
         ${smallSidebar ? "md:pl-[50px]" : "md:pl-[350px]"}
        
       `}
