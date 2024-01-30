@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware'
 import axios from 'axios';
 
-import { BASE_URL } from '../utils';
+import { BASE_URL } from '@/utils';
 
 const authStore = (set) => ({
   userProfile : null,
@@ -15,6 +15,7 @@ const authStore = (set) => ({
   fetchAllUsers : async () => {
     const response = await axios.get(`${BASE_URL}/api/users`);
     
+    console.log(BASE_URL);
     set({ allUsers : response.data });
   }
 });
