@@ -36,12 +36,12 @@ const Button = ({ likes, postId, color, likesLength, commentedByUser, post }) =>
         <>
           <AiOutlineComment  
             className={`font-semibold text-xl 
-              ${!!commentedByUser.length && "text-white"} 
+              ${!!commentedByUser?.length && "text-white"} 
             `} 
           />
           {!!post?.comments ? 
           <p className='font-medium text-white'>
-            <span className='font-semibold '>{post?.comments.length}{" "}</span>
+            <span className='font-semibold '>{post?.comments?.length}{" "}</span>
             {post?.comments?.length > 1 ? "comments" : "comment" }
           </p>
           : 
