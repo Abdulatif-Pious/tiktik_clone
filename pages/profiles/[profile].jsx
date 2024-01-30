@@ -59,9 +59,8 @@ const Profile = ({ profile : { user, userPosts : posts, userLikedPosts } }) => {
   return (
     <div 
       className={`
-        flex flex-col items-center gap-y-8 h-full
+        flex flex-col items-center h-full md:ml-8  gap-y-8  
         ${smallSidebar ? "md:pl-[50px]" : "md:pl-[350px]"}
-       
       `}
     >
       <UserAvatar 
