@@ -5,10 +5,7 @@ import { FaHome } from 'react-icons/fa';
 
 import useAuthStore from '@/store/auth-store';
 import { useGlobalContext } from '@/globalContext/context';
-import {  SuggestedAccounts } from "@/components";
-
-import Footer from "./Footer";
-import Discover from "./Discover";
+import {  SuggestedAccounts, Footer, Discover } from "@/components";
 
 const Sidebar = () => {
   const { smallSidebar } = useGlobalContext();

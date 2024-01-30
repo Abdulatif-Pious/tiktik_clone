@@ -7,9 +7,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/utils';
 import  useAuthStore  from '@/store/auth-store';
 import { useGlobalContext } from '@/globalContext/context';
-import {  UserAvatar } from '@/components';
-
-import  Post  from '../../components/Post';
+import {  UserAvatar, Post } from '@/components';
 
 const Button = ({ account, isAccount, icon: Icon, setIsAccount, label }) => {
   return (

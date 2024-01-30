@@ -5,11 +5,8 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import '@/styles/globals.css';
 import AppContext from '@/globalContext/context';
-import  {  MobileSidebar }  from '@/components';
+import  { MobileSidebar, Navbar, Sidebar }  from '@/components';
 import  useAuthStore  from "@/store/auth-store";
-
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
 
 export default function App({ Component, pageProps }) {
   const { fetchAllUsers,  allUsers} = useAuthStore();
