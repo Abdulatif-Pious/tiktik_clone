@@ -7,8 +7,8 @@ import useAuthStore from '@/store/auth-store';
 import { useGlobalContext } from '@/globalContext/context';
 import {  SuggestedAccounts } from "@/components";
 
-import Footer from "./footer";
-import Discover from "./discover";
+import Footer from "./Footer";
+import Discover from "./Discover";
 
 const Sidebar = () => {
   const { smallSidebar } = useGlobalContext();

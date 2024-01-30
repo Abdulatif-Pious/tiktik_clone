@@ -27,7 +27,8 @@ const Comment = ({ comment, setComment, comments, isSending,  handleComment, han
             </button>
             <button 
               type="submit"
-              className={`text-white w-full p-3 rounded-xl ouline-none cursor-pointer
+              className={`
+                text-white w-full p-3 rounded-xl ouline-none cursor-pointer
                 ${comment ? 'cursor-pointer bg-[#f51997]' : 'opacity-80 bg-[#f51997]/80 cursor-not-allowed' } 
               `}
               onClick={handleComment}

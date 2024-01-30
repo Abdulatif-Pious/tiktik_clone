@@ -6,7 +6,7 @@ import { useGlobalContext } from '@/globalContext/context';
 import { BASE_URL } from '@/utils';
 import { UserAvatar,  } from '@/components';
 
-import  Post  from '../../components/post';
+import  Post  from '../../components/Post';
 
 const Button = ({ showPosts, setShowPosts,  icon : Icon, label, like }) => {
   

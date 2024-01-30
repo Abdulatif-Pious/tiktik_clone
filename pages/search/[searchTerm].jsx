@@ -9,7 +9,7 @@ import  useAuthStore  from '@/store/auth-store';
 import { useGlobalContext } from '@/globalContext/context';
 import {  UserAvatar } from '@/components';
 
-import  Post  from '../../components/post';
+import  Post  from '../../components/Post';
 
 const Button = ({ account, isAccount, icon: Icon, setIsAccount, label }) => {
   return (

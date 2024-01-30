@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useGlobalContext } from '@/globalContext/context';
 import { BASE_URL } from '@/utils';
 
-import  Post  from '../components/post';
+import  Post  from '../components/Post';
 
 export default function Home({ post }) {
   const { smallSidebar } = useGlobalContext();

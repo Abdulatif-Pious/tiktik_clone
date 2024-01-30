@@ -8,8 +8,8 @@ import { useGlobalContext } from '@/globalContext/context';
 import useAuthStore from '@/store/auth-store';
 import { SuggestedAccounts } from "@/components";
 
-import Footer from "./footer";
-import Discover from "./discover";
+import Footer from "./Footer";
+import Discover from "./Discover";
 
 const MobileSidebar = () => {
   const { mobileSidebar, setMobileSidebar } = useGlobalContext();
