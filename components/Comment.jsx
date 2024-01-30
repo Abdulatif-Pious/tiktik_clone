@@ -40,11 +40,11 @@ const Comment = ({ comment, setComment, comments, isSending,  handleComment, han
         </div>
       )}
 
-      {!!comments.length ? 
+      {!!comments?.length ? 
       <div className='w-full bg-gray-50 rounded-xl p-2'>   
         {comments?.map((item, i) => {
-          const user = allUsers.filter((user) => user?._id === item?.postedBy?._ref);
-
+          const user = allUsers?.filter((user) => user?._id === item?.postedBy?._id);
+          
           return (
             <div key={`${item?._key}_${i}`} className="border-b-2 border-[#f51997]/20 mb-2">
               <div className='flex items-center justify-between'>

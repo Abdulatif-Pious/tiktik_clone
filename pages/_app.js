@@ -8,11 +8,15 @@ import  { MobileSidebar, Navbar, Sidebar }  from '@/components';
 import  useAuthStore  from "@/store/auth-store";
 
 export default function App({ Component, pageProps }) {
-  const { fetchAllUsers,  allUsers } = useAuthStore();
+  const { fetchAllUsers,  userProfile } = useAuthStore();
 
   useEffect(() => {
-    fetchAllUsers();
-  }, [allUsers.length]);
+    const fetchData = async () => {
+      await fetchAllUsers();
+    };
+  
+    fetchData();
+  }, [userProfile]);
 
   return (
     <>
