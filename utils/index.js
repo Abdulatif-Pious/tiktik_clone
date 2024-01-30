@@ -1,7 +1,7 @@
 import jwt_decode from 'jwt-decode';
 import axios from 'axios';
 
-export const BASE_URL = process.env.BASE_URL;
+export const BASE_URL = "https://abdulatif-tiktik-clone.vercel.app";
 
 export const createOrGetUser = async (response, addUser) => {
   const decoded = jwt_decode(response.credential);
